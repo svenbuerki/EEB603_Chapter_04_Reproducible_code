@@ -8,7 +8,9 @@
 
 # What is in this repository?
 
-This repository contains files associated to chapter 4, reproducible code of the EEB603. 
+This repository contains files associated to chapter 4, Reproducible code of the EEB603. 
+
+The file `Chapter_4_Reproducible_code.Rmd` contains the text, code and link to the data (here figures) at the basis of this class.  
 
 # Associated GitHub pages
 
