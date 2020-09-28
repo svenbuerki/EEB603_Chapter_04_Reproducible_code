@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Sven Buerki" />
+
+<meta name="date" content="2020-09-28" />
+
+<title>EEB603 – Chapter 4: Reproducible code</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible code</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Chapter_4_Reproducible_code.html">Teaching material</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">EEB603 – Chapter 4: Reproducible code</h1>
+<h4 class="author">Sven Buerki</h4>
+<h4 class="date">2020-09-28</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>The following steps have to be fully integrated in order to produce a reproducible code:</p>
+<ul>
+<li><strong>Step 1:</strong> Establish a reproducible project workflow.</li>
+<li><strong>Step 2:</strong> Organize project for reproducibility.</li>
+<li><strong>Step 3:</strong> Ensure basic programming standards.</li>
+<li><strong>Step 4:</strong> Document and manage dependencies.</li>
+<li><strong>Step 5:</strong> Produce a reproducible report (with R Markdown).</li>
+<li><strong>Step 6:</strong> Implement a version control protocol (with Git).</li>
+<li><strong>Step 7:</strong> Ensure archiving and citation of code.</li>
+</ul>
+<p>In this chapter, we will cover steps 1 to 4. Steps 5 and 7 have been respectively studied in chapters 1 and 4 (Data management), whereas step 6 will be covered in the bioinformatic tutorial associated to chapter 11.</p>
+</div>
+<div id="literature-and-web-resources-used-for-this-chapter" class="section level1">
+<h1><span class="header-section-number">2</span> Literature and web resources used for this chapter</h1>
+<p>This chapter is based on:</p>
+<ul>
+<li><span class="citation">British Ecological Society (<a href="#ref-RepCode">2014</a>)</span> – <em>A Guide to Reproducible Code in Ecology and Evolution</em> published by the <a href="https://www.britishecologicalsociety.org">British Ecological Society</a>.</li>
+<li><span class="citation">Wickham (<a href="#ref-wickham2014advanced">2014</a>)</span> – <em>Advanced R</em> by Hadley Wickham (<a href="https://adv-r.hadley.nz" class="uri">https://adv-r.hadley.nz</a>)</li>
+<li>Hadley Wickham’s R Style Guides: <a href="http://adv-r.had.co.nz/Style.html" class="uri">http://adv-r.had.co.nz/Style.html</a></li>
+<li>Absolute vs relative paths: <a href="https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths" class="uri">https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths</a></li>
+</ul>
+</div>
+<div id="draw-a-reproducible-project-workflow" class="section level1">
+<h1><span class="header-section-number">3</span> “Draw” a reproducible project workflow</h1>
+<div class="figure" style="text-align: center"><span id="fig:ReproWorkflow"></span>
+<img src="Figures/Reproducible_code_workflow.pdf" alt="A simple reproducible project workflow." width="100%" />
+<p class="caption">
+Figure 3.1: A simple reproducible project workflow.
+</p>
+</div>
+<p>An example of a reproducible project workflow is displayed in Figure <a href="#fig:ReproWorkflow">3.1</a>. This workflow serves as a basis for the discussion presented in this chapter.</p>
+</div>
+<div id="organize-project-for-reproducibility" class="section level1">
+<h1><span class="header-section-number">4</span> Organize project for reproducibility</h1>
+<div id="the-repeatable-reproducible-analysis-workflow" class="section level2">
+<h2><span class="header-section-number">4.1</span> The repeatable, reproducible analysis workflow</h2>
+<p>The fundamental idea behind a robust, reproducible analysis is <strong>a clean, repeatable script-based workflow (i.e. the sequence of tasks from the start to the end of a project) linking raw data through to clean data and to final analysis outputs</strong>.</p>
+</div>
+<div id="principles-of-a-good-analysis-workflow" class="section level2">
+<h2><span class="header-section-number">4.2</span> Principles of a good analysis workflow</h2>
+<p>Please find below some key concepts associated with this task:</p>
+<ul>
+<li>Start your analysis from copies of your raw data.</li>
+<li>Any cleaning, merging, transforming, etc. of data should be done in scripts, not manually.</li>
+<li>Split your workflow (scripts) into logical thematic units. For example, you might separate your code into scripts that
+<ol style="list-style-type: lower-roman">
+<li>load, merge and clean data,</li>
+<li>analyse data,</li>
+<li>produce outputs like figures and tables.</li>
+</ol></li>
+<li>Eliminate code duplication by packaging up useful code into custom functions (see Step3 : Ensure basic programming standards). Make sure to <strong>comment your functions thoroughly, explaining their expected inputs and outputs (as well as the associated arguments and their options), and what they are doing and why</strong>.</li>
+<li>Document your code and data as comments in your scripts and by producing separate documentation (using the R Markdown format).</li>
+<li>Any intermediary outputs generated by your workflow should be kept separate from raw data.</li>
+<li>Keep your raw data raw.</li>
+</ul>
+</div>
+<div id="organizing-and-documenting-workflows" class="section level2">
+<h2><span class="header-section-number">4.3</span> Organizing and documenting workflows</h2>
+<p>The simplest and most effective way of documenting your workflow – its inputs and outputs – is through good file system organization, and informative, consistent naming of materials associated with your analysis. The name and location of files should be as informative as possible on what a file contains, why it exists, and how it relates to other files in the project. These principles extend to all files in your project (not just scripts) and are also intimately linked to good research data management (see Chapter 4: Data management).</p>
+</div>
+<div id="file-system-structure" class="section level2">
+<h2><span class="header-section-number">4.4</span> File system structure</h2>
+<p>It is best to keep all files associated with a particular project in a single root directory. RStudio projects offer a great way to keep everything together in a self-contained and portable (i.e. so they can be moved from computer to computer) manner, allowing internal pathways to data and other scripts to remain valid even when shared or moved.</p>
+<div class="figure" style="text-align: center"><span id="fig:ProjStuct"></span>
+<img src="Figures/Example_project_structure.png" alt="Example file structure of a simple analysis project. Make sure you left-pad single digit numbers with a zero for the R scripts to avoid having those misordered." width="100%" />
+<p class="caption">
+Figure 4.1: Example file structure of a simple analysis project. Make sure you left-pad single digit numbers with a zero for the R scripts to avoid having those misordered.
+</p>
+</div>
+<p>There is no single best way to organize a file system. The key is to make sure that the structure of directories and location of files are consistent, informative and works for you. Please find below an example of basic project directory structure (Figure <a href="#fig:ProjStuct">4.1</a>):</p>
+<ul>
+<li>The <code>data</code> folder contains all input data (and metadata) used in the analysis.</li>
+<li>The <code>MS</code> folder contains the manuscript.</li>
+<li>The <code>Figures_&amp;_Tables</code> folder contains figures and tables generated by the analyses.</li>
+<li>The <code>Output</code> folder contains any type of intermediate or output files (e.g. simulation outputs, models, processed datasets, etc.). You might separate this and also have a <code>cleaned-data</code> folder.</li>
+<li>The <code>R_functions</code> folder contains R scripts with function definitions.</li>
+<li>The <code>Reports</code> folder contains RMarkdown files that document the analysis or report on results.</li>
+<li>The scripts (<code>*.R</code>) that actually do things are stored in the root directory together with the <code>README.md</code> file. If your project has too many scripts, you might consider organizing them in a separate folder.</li>
+</ul>
+<div id="use-r-to-infer-data-structure-and-organization-of-files-in-project" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Use R to infer data structure and organization of files in project</h3>
+<p>Inferring the directory tree structure of your project provides a simple and efficient way to summarize the data structure and organization of files related to your project as well as track versioning. The R base functions <em>list.files()</em> and <em>file.info()</em> can be combined to obtain information on files stored in your project. Please see code below for an example associated to Figure <a href="#fig:ProjStuct">4.1</a>.</p>
+<pre class="r"><code># Set working directory to your project directory
+setwd(&quot;Project_ID/&quot;)
+# Produce a list of all files in working directory together
+# with info related to those files
+file.info(list.files(recursive = TRUE, full.name = TRUE))</code></pre>
+<pre><code>##                                                size isdir mode
+## ./Data_structure.R                             1805 FALSE  644
+## ./Data/species_data.csv                           6 FALSE  644
+## ./DataStr_network.html                       256808 FALSE  644
+## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf  10282 FALSE  644
+## ./MS/MS_et_al.docx                            11705 FALSE  644
+## ./Output/DataStr_network.html                256368 FALSE  644
+## ./Output/DataStr_tree.pdf                      3611 FALSE  644
+## ./R_functions/check.install.pkg.R               684 FALSE  644
+## ./README.md                                      14 FALSE  644
+## ./Reports/Documentation.md                       14 FALSE  644
+## ./Scripts/01_download_data.R                     14 FALSE  644
+## ./Scripts/02_clean_data.R                        14 FALSE  644
+## ./Scripts/03_exploratory_analyses.R              14 FALSE  644
+## ./Scripts/04_fit_models.R                        14 FALSE  644
+## ./Scripts/05_generate_figures.R                  14 FALSE  644
+##                                                            mtime
+## ./Data_structure.R                           2019-10-07 08:36:45
+## ./Data/species_data.csv                      2018-09-12 10:02:55
+## ./DataStr_network.html                       2019-09-26 11:41:38
+## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2018-09-09 10:38:23
+## ./MS/MS_et_al.docx                           2019-09-23 11:51:58
+## ./Output/DataStr_network.html                2019-09-23 13:27:30
+## ./Output/DataStr_tree.pdf                    2019-09-23 13:04:03
+## ./R_functions/check.install.pkg.R            2019-09-10 09:54:03
+## ./README.md                                  2018-09-12 08:56:42
+## ./Reports/Documentation.md                   2018-09-12 08:56:42
+## ./Scripts/01_download_data.R                 2018-09-12 08:56:42
+## ./Scripts/02_clean_data.R                    2018-09-12 08:56:42
+## ./Scripts/03_exploratory_analyses.R          2018-09-12 08:56:42
+## ./Scripts/04_fit_models.R                    2018-09-12 08:56:42
+## ./Scripts/05_generate_figures.R              2018-09-12 08:56:42
+##                                                            ctime
+## ./Data_structure.R                           2020-09-28 12:27:19
+## ./Data/species_data.csv                      2020-09-28 12:27:19
+## ./DataStr_network.html                       2020-09-28 12:27:19
+## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-28 12:27:19
+## ./MS/MS_et_al.docx                           2020-09-28 12:27:19
+## ./Output/DataStr_network.html                2020-09-28 12:27:19
+## ./Output/DataStr_tree.pdf                    2020-09-28 12:27:19
+## ./R_functions/check.install.pkg.R            2020-09-28 12:27:19
+## ./README.md                                  2020-09-28 12:27:19
+## ./Reports/Documentation.md                   2020-09-28 12:27:19
+## ./Scripts/01_download_data.R                 2020-09-28 12:27:19
+## ./Scripts/02_clean_data.R                    2020-09-28 12:27:19
+## ./Scripts/03_exploratory_analyses.R          2020-09-28 12:27:19
+## ./Scripts/04_fit_models.R                    2020-09-28 12:27:19
+## ./Scripts/05_generate_figures.R              2020-09-28 12:27:19
+##                                                            atime uid gid
+## ./Data_structure.R                           2020-09-28 12:27:21 502  20
+## ./Data/species_data.csv                      2020-09-27 05:16:00 502  20
+## ./DataStr_network.html                       2020-09-27 05:17:16 502  20
+## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-27 05:16:00 502  20
+## ./MS/MS_et_al.docx                           2020-09-27 05:21:18 502  20
+## ./Output/DataStr_network.html                2020-09-27 05:17:16 502  20
+## ./Output/DataStr_tree.pdf                    2020-09-27 05:16:00 502  20
+## ./R_functions/check.install.pkg.R            2020-09-28 12:27:19 502  20
+## ./README.md                                  2020-09-28 12:27:19 502  20
+## ./Reports/Documentation.md                   2020-09-28 12:27:21 502  20
+## ./Scripts/01_download_data.R                 2020-09-27 05:16:00 502  20
+## ./Scripts/02_clean_data.R                    2020-09-28 12:27:21 502  20
+## ./Scripts/03_exploratory_analyses.R          2020-09-27 05:16:00 502  20
+## ./Scripts/04_fit_models.R                    2020-09-27 05:16:00 502  20
+## ./Scripts/05_generate_figures.R              2020-09-28 12:27:21 502  20
+##                                                   uname grname
+## ./Data_structure.R                           svenbuerki  staff
+## ./Data/species_data.csv                      svenbuerki  staff
+## ./DataStr_network.html                       svenbuerki  staff
+## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf svenbuerki  staff
+## ./MS/MS_et_al.docx                           svenbuerki  staff
+## ./Output/DataStr_network.html                svenbuerki  staff
+## ./Output/DataStr_tree.pdf                    svenbuerki  staff
+## ./R_functions/check.install.pkg.R            svenbuerki  staff
+## ./README.md                                  svenbuerki  staff
+## ./Reports/Documentation.md                   svenbuerki  staff
+## ./Scripts/01_download_data.R                 svenbuerki  staff
+## ./Scripts/02_clean_data.R                    svenbuerki  staff
+## ./Scripts/03_exploratory_analyses.R          svenbuerki  staff
+## ./Scripts/04_fit_models.R                    svenbuerki  staff
+## ./Scripts/05_generate_figures.R              svenbuerki  staff</code></pre>
+<p>The code presented here could be at the core of a user-defined function that would aim at managing files and ensuring data reliability for your project.</p>
+</div>
+</div>
+<div id="informative-consistent-naming" class="section level2">
+<h2><span class="header-section-number">4.5</span> Informative, consistent naming</h2>
+<p>Good naming extends to all files, folders and even objects in your analysis and serves to make the contents and relationships among elements of your analysis understandable, searchable and organised in a logical fashion (see Figure <a href="#fig:ProjStuct">4.1</a> for examples and Chapter 4: Data management for more details).</p>
+</div>
+</div>
+<div id="ensure-basic-programming-standards" class="section level1">
+<h1><span class="header-section-number">5</span> Ensure basic programming standards</h1>
+<div id="writing-pseudocode" class="section level2">
+<h2><span class="header-section-number">5.1</span> Writing pseudocode</h2>
+<p>Pseudocode is an informal high-level description of the operating principle of a computer program or other algorithm. It uses the structural conventions of a normal programming language (here R), but is intended for human reading rather than machine reading. Here, you will establish the big steps (and their associated tasks) and tie R functions (existing or that have to be made) to those steps. This provides the backbone of your code and will support writing it.</p>
+</div>
+<div id="writing-code" class="section level2">
+<h2><span class="header-section-number">5.2</span> Writing code</h2>
+<p>Writing clear, reproducible code has (at least) three main benefits:
+1. It makes returning to the code much easier a few months down the line; whether revisiting an old project, or making revisions following peer review.
+2. The results of your analysis are more easily scrutinized by the readers of your paper, meaning it is easier to show their validity.
+3. Having clean and reproducible code available can encourage greater uptake of new methods that you have developed.</p>
+<p>To write clear and reproducible code, it is recommended to follow the workflow depicted in Figure <a href="#fig:ReproWorkflow">3.1</a>. The following section explains each part of the workflow along with some tips for writing code. Although this workflow would be the ‘gold standard’, just picking up some of the elements can help to make your code more effective and readable.</p>
+<div id="style-guides" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Style guides</h3>
+<p>The foundation of writing readable code is to choose a logical and readable coding style, and to stick to it. Some key elements to consider when developing a coding style are:</p>
+<ul>
+<li>Using meaningful file names, and numbering these if they are in a sequence (see Figure <a href="#fig:ProjStuct">4.1</a> for examples and Chapter 4: Data management for more details).</li>
+</ul>
+<pre class="r"><code># Good
+fit - models.R
+utility - functions.R
+# Bad
+foo.r
+stuff.r</code></pre>
+<ul>
+<li>Concise and descriptive object names. Variable names should usually be nouns and function names verbs. Using names of existing variables or functions should be avoided.</li>
+</ul>
+<pre class="r"><code># Good
+day_one
+day_1
+# Bad
+first_day_of_the_month
+DayOne
+dayone
+djm1</code></pre>
+<ul>
+<li>Spacing should be used to improve visual effect: use spaces around operators (<code>=</code>, <code>+</code>, <code>-</code>, <code>&lt;-</code>, etc.), and after commas (much like in a sentence).</li>
+</ul>
+<pre class="r"><code># Good
+average &lt;- mean(feet/12 + inches, na.rm = TRUE)
+# Bad
+average &lt;- mean(feet/12 + inches, na.rm = TRUE)</code></pre>
+<ul>
+<li>Indentation should be with two spaces, not tabs, and definitely not a mixture of tabs and spaces.</li>
+</ul>
+<pre class="r"><code>long_function_name &lt;- function(a = &quot;a long argument&quot;, b = &quot;another argument&quot;, 
+    c = &quot;another long argument&quot;) {
+    # As usual code is indented by two spaces.
+}</code></pre>
+<ul>
+<li>Assignment. Use <code>&lt;-</code>, not <code>=</code>, for assignment.</li>
+</ul>
+<pre class="r"><code># Good
+x &lt;- 5
+# Bad
+x = 5</code></pre>
+<p>The most important role of a style guide, however, is to introduce consistency to scripts.</p>
+</div>
+<div id="portable-code-absolute-vs.relative-paths" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Portable code: Absolute vs. Relative paths</h3>
+<p>When working collaboratively, portability between machines is very important, i.e. will your code work on someone else’s computer? Portability is also important if code is being run on another server, for example a High Performance Cluster. One way to improve portability of code is to avoid using absolute paths and use only relative paths (see <a href="https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths" class="uri">https://en.wikipedia.org/wiki/Path_(computing)#Absolute_and_relative_paths</a>).</p>
+<p><strong>An absolute path is one that gives the full address to a folder or file. A relative path gives the location of the file from the current working directory.</strong></p>
+<p>For example based on <code>species_data.csv| stored in the</code>Data| folder shown in Figure <a href="#fig:ProjStuct">4.1</a>:</p>
+<pre class="r"><code># Absolute path -----------------------------
+C:/Project_ID/Data/species_data.csv
+
+Project_ID = Project root folder = working directory
+
+# Relative path ------
+Data/species_data.csv</code></pre>
+<p>Relative paths are particularly useful when transferring between computers because while I may have stored my project folder in ‘C:/Project_ID/’, you may have yours stored in ‘C:/Users/My Documents’. Using relative paths and running from the project folder will ensure that <em>file-not-found errors</em> are avoided.</p>
+<p>RStudio is especially designed to help portability of code. For instance, you can easily set the working directory in RStudio by clicking:</p>
+<pre class="r"><code>Session &gt; Set Working Directory &gt; To Source File Location</code></pre>
+<p>or using the <em>setwd()</em> function. Please see chapter 1 for more details.</p>
+</div>
+</div>
+<div id="commenting-code" class="section level2">
+<h2><span class="header-section-number">5.3</span> Commenting code</h2>
+<p>How often have you revisited an old script six months down the line and not been able to figure out what you had been doing? Or have taken on a script from a collaborator and not been able to understand what their code is doing and why? An easy win for making code more readable and reproducible is the liberal, and effective, use of comments. A comment is a line of code that is visible, but does not get run with the rest of the script. In R and Python this is signified by beginning the line with a #.</p>
+<p><strong>One good principle to adhere to is to comment the ‘why’ rather than the ‘what’</strong>. The code itself tells the reader what is being done, it is far more important to document the reasoning behind a particular section of code or, if it is doing something nonstandard or complicated, to take some time to describe that section of code.</p>
+<p>It is also good practice to use comments to add an overview at the beginning of a script, and commented lines of <code>---</code> to break up the script: e.g. in R</p>
+<pre class="r"><code># Load data -------</code></pre>
+</div>
+<div id="writing-functions" class="section level2">
+<h2><span class="header-section-number">5.4</span> Writing functions</h2>
+<p>Often when you are analyzing data, you need to repeat the same task many times. For example, you might have several files that all need loading and cleaning in the same way, or you might need to perform the same analysis for multiple species or parameters. The best way (by far) to handle those tasks is to write functions and store those in a specific folder (e.g. <code>R_functions</code> in <a href="#fig:ProjStuct">4.1</a>). Those functions will be loaded into the R environment (and therefore made available to users) by using the <code>source()</code> function, which will be placed at the top of your R script. Please see chapter 1 part D for more details.</p>
+<p><strong>A function is a self-contained block of code that performs a single action. A function takes in a set of arguments, applies the action, and returns an object of any data type. A function should not rely on data from outside of the function, and should not manipulate data outside of the function.</strong></p>
+<div id="your-first-or-actually-second-function" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Your first (or actually second) function</h3>
+<p>Below is a user-defined function inferring the square of a number. Please see comment in code for more details.</p>
+<pre class="r"><code># Create a user-defined function in R to calculate square
+# number: - argument: base (= one number) - output: square of
+# base (=one number)
+square_number &lt;- function(base) {
+    square &lt;- base * base
+    return(square)
+}
+# Calling a user-defined function in R
+square_number(5)</code></pre>
+<pre><code>## [1] 25</code></pre>
+<p>Note that you are asking R to return the result using <code>return(square)</code>. This is not strictly needed in this example, but using <code>return()</code> saves problems when writing more complicated functions.</p>
+</div>
+<div id="exercise-apply-function-across-a-vector" class="section level3">
+<h3><span class="header-section-number">5.4.2</span> Exercise: Apply function across a vector</h3>
+<p>Amend the code shown above to calculate square numbers of multiple numbers stored in a vector (e.g. from 1 to 10).</p>
+</div>
+</div>
+<div id="defensive-programming-supporting-debugging" class="section level2">
+<h2><span class="header-section-number">5.5</span> Defensive programming: Supporting debugging!</h2>
+<p>Defensive programming is a technique to ensure that code fails with well-defined errors, i.e. where you know it should not work. The key here is to ‘fail fast’ and ensure that the code throws an error as soon as something unexpected happens. This creates a little more work for the programmer, but makes debugging code a lot easier at a later date.</p>
+<p>In order to demonstrate how to apply defensive programming to your code a new function will be defined:</p>
+<pre class="r"><code># Define a power function (exp_number): y = x^n - Arguments:
+# base (= x) and power (= n) - Output: a number (y)
+exp_number &lt;- function(base, power) {
+    exp &lt;- base^power
+    return(exp)
+}
+# Call function
+exp_number(2, 5)</code></pre>
+<pre><code>## [1] 32</code></pre>
+<p>You can employ defensive programming on the `exp_number| function defined above. The function requires that both arguments are numeric, if you were to provide a string (e.g. a word) as input, you would get an error:</p>
+<pre class="r"><code># Example where we don&#39;t respect the class associated with
+# the argument base
+exp_number(&quot;hello&quot;, 5)</code></pre>
+<pre><code>## Error in base^power: non-numeric argument to binary operator</code></pre>
+<p>If you add in a line of code to test the data type of the inputs, you get a more meaningful error.</p>
+<pre class="r"><code># Define a power function (exp_number): y = x ^n - Arguments:
+# base (= x) and power (= n) - Output: a number (y)
+exp_number &lt;- function(base, power) {
+    if (class(base) != &quot;numeric&quot; | class(power) != &quot;numeric&quot;) {
+        stop(&quot;Both base and power inputs must be numeric&quot;)
+    }
+    exp &lt;- base^power
+    return(exp)
+}
+# Call function
+exp_number(&quot;hello&quot;, 5)</code></pre>
+<pre><code>## Error in exp_number(&quot;hello&quot;, 5): Both base and power inputs must be numeric</code></pre>
+<p>Although in this case debugging the error would not have taken long, in more complicated functions you are likely to either have less meaningful error messages, or code that runs for some time before it fails. By applying defensive programming and adding in these checks to the code, you can find unexpected behavior sooner and with more meaningful error messages.</p>
+</div>
+<div id="testing-scientific-code" class="section level2">
+<h2><span class="header-section-number">5.6</span> Testing scientific code</h2>
+<p>In the experimental sciences, rigorous testing is applied to ensure that results are accurate, reproducible and reliable. Testing will show that the experimental setup is doing what it is meant to do and will quantify any systematic biases. Results of experiments will not be trusted without such tests; why should your code be any different? Testing scientific code allows you to be sure that it is working as intended and to understand and quantify any limitations of the code. Using tests can also help to speed up the code development process by finding errors early on.</p>
+<p>Although the instructor recognizes the importance of establishing protocols, those tests will be especially relevant if you were to design R packages. However, the instructor would recommend informal testing by loading functions that have been written by the students and running <em>ad hoc</em> tests in the command line to make sure that they perform as expected.</p>
+</div>
+</div>
+<div id="document-manage-dependencies" class="section level1">
+<h1><span class="header-section-number">6</span> Document &amp; manage dependencies</h1>
+<p>Reproducibility is also about making sure someone else can re-use your code to obtain the same results as you (see <a href="#appendix-1">Appendix 1</a> for more details).</p>
+<p>For someone else to be able to reproduce the results included in your report, you need to provide more than the code and the data. You also need to document the exact versions of all the packages, libraries, and software you used, and potentially your operating system as well as your hardware.</p>
+<p>R itself is very stable, and the core team of developers takes backward compatibility (old code works with recent versions of R) very seriously. However, default values in some functions change, and new functions get introduced regularly. If you wrote your code on a recent version of R and give it to someone who has not upgraded recently, they may not be able to run your code. Code written for one version of a package may produce very different results with a more recent version.</p>
+<div id="reporting-r-packages-versions" class="section level2">
+<h2><span class="header-section-number">6.1</span> Reporting R packages &amp; versions</h2>
+<p>With R, the simplest (but a useful and important) approach to document your dependencies is to report the output of <code>sessionInfo()|</code> (or <code>devtools::session_info()</code>). Among other information, this will show all the packages and their versions that are loaded in the session you used to run your analysis. If someone wants to recreate your analysis, they will know which packages they will need to install. Please see <a href="#appendix-2">Appendix 2</a> for more details.</p>
+<p>For instance, here is the output of <code>sessionInfo()</code> showing the R version and packages that I used to create this document:</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] devtools_2.2.1       usethis_1.5.1        knitcitations_1.0.10
+##  [4] htmltools_0.5.0      prettydoc_0.3.1      magrittr_1.5        
+##  [7] dplyr_0.8.3          kableExtra_1.1.0     formattable_0.2.0.1 
+## [10] bookdown_0.20        rmarkdown_2.3        knitr_1.30          
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5        lubridate_1.7.9   prettyunits_1.1.1 ps_1.3.0         
+##  [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25     R6_2.4.1         
+##  [9] plyr_1.8.5        backports_1.1.10  evaluate_0.14     highr_0.8        
+## [13] httr_1.4.1        pillar_1.4.3      rlang_0.4.7       rstudioapi_0.11  
+## [17] callr_3.4.1       desc_1.2.0        webshot_0.5.2     RefManageR_1.2.12
+## [21] readr_1.3.1       stringr_1.4.0     htmlwidgets_1.5.1 munsell_0.5.0    
+## [25] compiler_3.6.1    xfun_0.17         pkgconfig_2.0.3   pkgbuild_1.0.6   
+## [29] tidyselect_0.2.5  tibble_2.1.3      codetools_0.2-16  fansi_0.4.1      
+## [33] viridisLite_0.3.0 crayon_1.3.4      withr_2.1.2       jsonlite_1.7.1   
+## [37] lifecycle_0.1.0   formatR_1.7       scales_1.1.1      bibtex_0.4.2.2   
+## [41] cli_2.0.1         stringi_1.5.3     fs_1.3.1          remotes_2.1.0    
+## [45] testthat_2.3.1    xml2_1.3.2        ellipsis_0.3.1    generics_0.0.2   
+## [49] vctrs_0.3.4       tools_3.6.1       glue_1.4.2        purrr_0.3.3      
+## [53] hms_0.5.3         processx_3.4.1    pkgload_1.0.2     yaml_2.2.1       
+## [57] colorspace_1.4-1  sessioninfo_1.1.1 rvest_0.3.5       memoise_1.1.0</code></pre>
+</div>
+<div id="using-r-packages-to-help-managing-dependencies-and-recreate-setup" class="section level2">
+<h2><span class="header-section-number">6.2</span> Using R packages to help managing dependencies and recreate setup</h2>
+<p>This will not be covered in this class, but it is worth noting that there are at least two R packages allowing to better manage dependencies and recreate your setup. Those packages are:</p>
+<ul>
+<li><em>checkpoint</em>: <a href="https://cran.r-project.org/web/packages/checkpoint/vignettes/checkpoint.html" class="uri">https://cran.r-project.org/web/packages/checkpoint/vignettes/checkpoint.html</a></li>
+<li><em>packrat</em>: <a href="https://rstudio.github.io/packrat/" class="uri">https://rstudio.github.io/packrat/</a></li>
+</ul>
+<p>The instructor expects students to discuss with their supervisors to identify if those packages are potentially useful for their projects.</p>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1><span class="header-section-number">7</span> References</h1>
+<div id="refs">
+<div id="ref-RepCode">
+<p><span class="smallcaps">British Ecological Society</span> ed.. 2014. A guide to reproducible code in ecology and evolution. British Ecological Society.</p>
+</div>
+<div id="ref-wickham2014advanced">
+<p><span class="smallcaps">Wickham, H.</span> 2014. Advanced R. Taylor &amp; Francis. Available at: <a href="https://books.google.com/books?id=PFHFNAEACAAJ">https://books.google.com/books?id=PFHFNAEACAAJ</a>.</p>
+</div>
+</div>
+</div>
+<div id="appendix-appendix" class="section level1 unnumbered">
+<h1>Appendix</h1>
+</div>
+<div id="appendix-1" class="section level1">
+<h1><span class="header-section-number">A</span> Appendix 1</h1>
+<p>Citations of all R packages used to generate this report.</p>
+<pre class="r"><code>library(&quot;knitcitations&quot;)
+cleanbib()
+options(citation_format = &quot;pandoc&quot;)
+read.bibtex(file = &quot;packages.bib&quot;)</code></pre>
+<p>[1] J. Allaire, Y. Xie, J. McPherson, et al. <em>rmarkdown: Dynamic
+Documents for R</em>. R package version 2.3. 2020. &lt;URL:
+<a href="https://github.com/rstudio/rmarkdown" class="uri">https://github.com/rstudio/rmarkdown</a>&gt;.</p>
+<p>[2] S. M. Bache and H. Wickham. <em>magrittr: A Forward-Pipe Operator for
+R</em>. R package version 1.5. 2014. &lt;URL:
+<a href="https://CRAN.R-project.org/package=magrittr" class="uri">https://CRAN.R-project.org/package=magrittr</a>&gt;.</p>
+<p>[3] C. Boettiger. <em>knitcitations: Citations for Knitr Markdown Files</em>.
+R package version 1.0.10. 2019. &lt;URL:
+<a href="https://github.com/cboettig/knitcitations" class="uri">https://github.com/cboettig/knitcitations</a>&gt;.</p>
+<p>[4] J. Cheng, C. Sievert, W. Chang, et al. <em>htmltools: Tools for HTML</em>.
+R package version 0.5.0. 2020. &lt;URL:
+<a href="https://github.com/rstudio/htmltools" class="uri">https://github.com/rstudio/htmltools</a>&gt;.</p>
+<p>[5] Y. Qiu. <em>prettydoc: Creating Pretty Documents from R Markdown</em>. R
+package version 0.3.1. 2019. &lt;URL:
+<a href="https://github.com/yixuan/prettydoc" class="uri">https://github.com/yixuan/prettydoc</a>&gt;.</p>
+<p>[6] R Core Team. <em>R: A Language and Environment for Statistical
+Computing</em>. R Foundation for Statistical Computing. Vienna, Austria,
+2019. &lt;URL: <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>&gt;.</p>
+<p>[7] K. Ren and K. Russell. <em>formattable: Create Formattable Data
+Structures</em>. R package version 0.2.0.1. 2016. &lt;URL:
+<a href="https://CRAN.R-project.org/package=formattable" class="uri">https://CRAN.R-project.org/package=formattable</a>&gt;.</p>
+<p>[8] H. Wickham and J. Bryan. <em>usethis: Automate Package and Project
+Setup</em>. R package version 1.5.1. 2019. &lt;URL:
+<a href="https://CRAN.R-project.org/package=usethis" class="uri">https://CRAN.R-project.org/package=usethis</a>&gt;.</p>
+<p>[9] H. Wickham, R. François, L. Henry, et al. <em>dplyr: A Grammar of Data
+Manipulation</em>. R package version 0.8.3. 2019. &lt;URL:
+<a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>&gt;.</p>
+<p>[10] H. Wickham, J. Hester, and W. Chang. <em>devtools: Tools to Make
+Developing R Packages Easier</em>. R package version 2.2.1. 2019. &lt;URL:
+<a href="https://github.com/r-lib/devtools" class="uri">https://github.com/r-lib/devtools</a>&gt;.</p>
+<p>[11] Y. Xie. <em>bookdown: Authoring Books and Technical Documents with R
+Markdown</em>. ISBN 978-1138700109. Boca Raton, Florida: Chapman and
+Hall/CRC, 2016. &lt;URL: <a href="https://github.com/rstudio/bookdown" class="uri">https://github.com/rstudio/bookdown</a>&gt;.</p>
+<p>[12] Y. Xie. <em>bookdown: Authoring Books and Technical Documents with R
+Markdown</em>. R package version 0.20. 2020. &lt;URL:
+<a href="https://github.com/rstudio/bookdown" class="uri">https://github.com/rstudio/bookdown</a>&gt;.</p>
+<p>[13] Y. Xie. <em>Dynamic Documents with R and knitr</em>. 2nd. ISBN
+978-1498716963. Boca Raton, Florida: Chapman and Hall/CRC, 2015. &lt;URL:
+<a href="https://yihui.org/knitr/" class="uri">https://yihui.org/knitr/</a>&gt;.</p>
+<p>[14] Y. Xie. “knitr: A Comprehensive Tool for Reproducible Research in
+R”. In: <em>Implementing Reproducible Computational Research</em>. Ed. by V.
+Stodden, F. Leisch and R. D. Peng. ISBN 978-1466561595. Chapman and
+Hall/CRC, 2014. &lt;URL:
+<a href="http://www.crcpress.com/product/isbn/9781466561595" class="uri">http://www.crcpress.com/product/isbn/9781466561595</a>&gt;.</p>
+<p>[15] Y. Xie. <em>knitr: A General-Purpose Package for Dynamic Report
+Generation in R</em>. R package version 1.30. 2020. &lt;URL:
+<a href="https://yihui.org/knitr/" class="uri">https://yihui.org/knitr/</a>&gt;.</p>
+<p>[16] Y. Xie, J. Allaire, and G. Grolemund. <em>R Markdown: The Definitive
+Guide</em>. ISBN 9781138359338. Boca Raton, Florida: Chapman and Hall/CRC,
+2018. &lt;URL: <a href="https://bookdown.org/yihui/rmarkdown" class="uri">https://bookdown.org/yihui/rmarkdown</a>&gt;.</p>
+<p>[17] H. Zhu. <em>kableExtra: Construct Complex Table with kable and Pipe
+Syntax</em>. R package version 1.1.0. 2019. &lt;URL:
+<a href="https://CRAN.R-project.org/package=kableExtra" class="uri">https://CRAN.R-project.org/package=kableExtra</a>&gt;.</p>
+</div>
+<div id="appendix-2" class="section level1">
+<h1><span class="header-section-number">B</span> Appendix 2</h1>
+<p>Version information about R, the operating system (OS) and attached or R loaded packages. This appendix was generated using <code>sessionInfo()</code>.</p>
+<pre><code>## R version 3.6.1 (2019-07-05)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Mojave 10.14.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] devtools_2.2.1       usethis_1.5.1        knitcitations_1.0.10
+##  [4] htmltools_0.5.0      prettydoc_0.3.1      magrittr_1.5        
+##  [7] dplyr_0.8.3          kableExtra_1.1.0     formattable_0.2.0.1 
+## [10] bookdown_0.20        rmarkdown_2.3        knitr_1.30          
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5        lubridate_1.7.9   prettyunits_1.1.1 ps_1.3.0         
+##  [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25     R6_2.4.1         
+##  [9] plyr_1.8.5        backports_1.1.10  evaluate_0.14     highr_0.8        
+## [13] httr_1.4.1        pillar_1.4.3      rlang_0.4.7       rstudioapi_0.11  
+## [17] callr_3.4.1       desc_1.2.0        webshot_0.5.2     RefManageR_1.2.12
+## [21] readr_1.3.1       stringr_1.4.0     htmlwidgets_1.5.1 munsell_0.5.0    
+## [25] compiler_3.6.1    xfun_0.17         pkgconfig_2.0.3   pkgbuild_1.0.6   
+## [29] tidyselect_0.2.5  tibble_2.1.3      codetools_0.2-16  fansi_0.4.1      
+## [33] viridisLite_0.3.0 crayon_1.3.4      withr_2.1.2       jsonlite_1.7.1   
+## [37] lifecycle_0.1.0   formatR_1.7       scales_1.1.1      bibtex_0.4.2.2   
+## [41] cli_2.0.1         stringi_1.5.3     fs_1.3.1          remotes_2.1.0    
+## [45] testthat_2.3.1    xml2_1.3.2        ellipsis_0.3.1    generics_0.0.2   
+## [49] vctrs_0.3.4       tools_3.6.1       glue_1.4.2        purrr_0.3.3      
+## [53] hms_0.5.3         processx_3.4.1    pkgload_1.0.2     yaml_2.2.1       
+## [57] colorspace_1.4-1  sessioninfo_1.1.1 rvest_0.3.5       memoise_1.1.0</code></pre>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

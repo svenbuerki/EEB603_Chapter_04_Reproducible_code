@@ -1,0 +1,29 @@
+---
+title: "EEB603 - Chapter 4: Reproducible code"
+author: "Sven Buerki"
+date: "Boise State University"
+---
+
+# Learning outcomes
+
+In this chapter, students will gain skill to:
+
+- Establish and organize project to ensure reproducibility.
+- Ensure basic coding standards and document dependencies.
+- Implement a version control protocol and archive code.  
+
+# Overview of content
+
+This website is associated to EEB603 - Reproducible Science and covers material presented in Chapter 4, reproducible code.
+
+The following steps have to be fully integrated in order to produce a reproducible code:
+
+- **Step 1:** Establish a reproducible project workflow.
+- **Step 2:** Organize project for reproducibility.
+- **Step 3:** Ensure basic programming/coding standards.
+- **Step 4:** Document and manage dependencies.
+- **Step 5:** Produce a reproducible report (with R Markdown).
+- **Step 6:** Implement a version control protocol (with Git).
+- **Step 7:** Ensure archiving and citation of code.
+
+In this chapter, we cover steps 1 to 4. Steps 5 and 7 have been respectively studied in chapters 1 and 4 (Data management), whereas step 6 will be covered in the bioinformatic tutorial associated to chapter 11.
