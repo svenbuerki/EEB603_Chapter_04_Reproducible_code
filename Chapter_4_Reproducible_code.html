@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sven Buerki" />
 
-<meta name="date" content="2020-09-28" />
+<meta name="date" content="2020-09-29" />
 
 <title>EEB603 – Chapter 4: Reproducible code</title>
 
@@ -369,7 +369,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">EEB603 – Chapter 4: Reproducible code</h1>
 <h4 class="author">Sven Buerki</h4>
-<h4 class="date">2020-09-28</h4>
+<h4 class="date">2020-09-29</h4>
 
 </div>
 
@@ -570,18 +570,22 @@ file.info(list.files(recursive = TRUE, full.name = TRUE))</code></pre>
 <ul>
 <li>Using meaningful file names, and numbering these if they are in a sequence (see Figure <a href="#fig:ProjStuct">4.1</a> for examples and Chapter 4: Data management for more details).</li>
 </ul>
-<pre class="r"><code># Good
-fit - models.R
-utility - functions.R
+<pre class="r"><code>### Naming files
+# Good
+fit-models.R
+utility-functions.R
+
 # Bad
 foo.r
 stuff.r</code></pre>
 <ul>
 <li>Concise and descriptive object names. Variable names should usually be nouns and function names verbs. Using names of existing variables or functions should be avoided.</li>
 </ul>
-<pre class="r"><code># Good
+<pre class="r"><code>### Naming objects
+# Good
 day_one
 day_1
+
 # Bad
 first_day_of_the_month
 DayOne
@@ -590,22 +594,28 @@ djm1</code></pre>
 <ul>
 <li>Spacing should be used to improve visual effect: use spaces around operators (<code>=</code>, <code>+</code>, <code>-</code>, <code>&lt;-</code>, etc.), and after commas (much like in a sentence).</li>
 </ul>
-<pre class="r"><code># Good
-average &lt;- mean(feet/12 + inches, na.rm = TRUE)
+<pre class="r"><code>### Spacing
+# Good
+average &lt;- mean(feet / 12 + inches, na.rm = TRUE)
+
 # Bad
-average &lt;- mean(feet/12 + inches, na.rm = TRUE)</code></pre>
+average&lt;-mean(feet/12+inches,na.rm=TRUE)</code></pre>
 <ul>
 <li>Indentation should be with two spaces, not tabs, and definitely not a mixture of tabs and spaces.</li>
 </ul>
-<pre class="r"><code>long_function_name &lt;- function(a = &quot;a long argument&quot;, b = &quot;another argument&quot;, 
-    c = &quot;another long argument&quot;) {
-    # As usual code is indented by two spaces.
+<pre class="r"><code>### Indentation
+long_function_name &lt;- function(a = &quot;a long argument&quot;, 
+                               b = &quot;another argument&quot;,
+                               c = &quot;another long argument&quot;) {
+  # As usual code is indented by two spaces.
 }</code></pre>
 <ul>
 <li>Assignment. Use <code>&lt;-</code>, not <code>=</code>, for assignment.</li>
 </ul>
-<pre class="r"><code># Good
+<pre class="r"><code>### Assignment
+# Good
 x &lt;- 5
+
 # Bad
 x = 5</code></pre>
 <p>The most important role of a style guide, however, is to introduce consistency to scripts.</p>
