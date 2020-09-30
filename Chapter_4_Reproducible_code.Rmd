@@ -24,6 +24,8 @@ library(prettydoc)
 library(htmltools)
 library(knitcitations)
 library(devtools)
+library(data.tree)
+library(DiagrammeR)
 
 #Generate BibTex citation file for all R packages used to produce report
 knitr::write_bib(.packages(), file = 'packages.bib')
@@ -122,19 +124,46 @@ There is no single best way to organize a file system. The key is to make sure t
 - The `Reports` folder contains RMarkdown files that document the analysis or report on results.
 - The scripts (`*.R`) that actually do things are stored in the root directory together with the `README.md` file. If your project has too many scripts, you might consider organizing them in a separate folder.
 
-### Use R to infer data structure and organization of files in project
+## Using R to infer data structure and organization of files
 
 Inferring the directory tree structure of your project provides a simple and efficient way to summarize the data structure and organization of files related to your project as well as track versioning. The R base functions *list.files()* and *file.info()* can be combined to obtain information on files stored in your project. Please see code below for an example associated to Figure \@ref(fig:ProjStuct).  
 
 ```{r TreeDir, echo=TRUE, tidy=TRUE, warning=FALSE}
-#Set working directory to your project directory
-setwd("Project_ID/")
-
-#Produce a list of all files in working directory together with info related to those files
-file.info(list.files(recursive = TRUE, full.name = TRUE))
+#Produce a list of all files in working directory (Project-ID) together with info related to those files
+file.info(list.files(path="Project_ID", recursive = TRUE, full.name = TRUE))
 ```
 
-The code presented here could be at the core of a user-defined function that would aim at managing files and ensuring data reliability for your project.
+### Pseudocode and associated R script
+
+The code presented above could be at the core of a user-defined function that would aim at managing files and ensuring data reliability for your project. To help you define such a function, let's investigate this further and produce a diagram summarizing your project structure. This objective is achieved in three steps (see Figure \@ref(fig:plotProjStr)):
+
+- **Step 1:** Produce a list of all files in your working directory using *file.info* and *list.files* functions. The output of this code is a `data.frame`
+- **Step 2:** Convert the `data.frame` into a `data.tree` class object. This is done using the *data.tree::as.Node* function from the `data.tree` package.
+- **Step 3:** Prepare and plot diagram of project structure. This is done using set of functions from `data.tree` and plotting the output using `DiagrammR` package.
+
+```{r plotProjStr, echo=T, eval=T, fig.cap="Diagram of project structure for the Project_ID directory. Nodes representing folders and files associated to R code are symbolized by boxes, whereas the others are rounded.", fig.dim=c(6,6)}
+### Step 1: Produce a list of all files in Project_ID
+filesInfo <- file.info(list.files(path="Project_ID", recursive = TRUE, full.name = TRUE))
+
+### Step 2: Convert filesInfo into data.tree class
+myproj <- data.tree::as.Node(data.frame(pathString = rownames(filesInfo)))
+
+#Inspect output
+print(myproj)
+
+### Step 3: Prepare and plot diagram of project structure (it requires DiagrammeR)
+
+#Set parameters related to graph, edges and nodes
+data.tree::SetGraphStyle(myproj$root, rankdir = "LR")
+data.tree::SetEdgeStyle(myproj$root, arrowhead = "vee", color = "grey", penwidth = "2px")
+data.tree::SetNodeStyle(myproj, style = "rounded", shape = "box")
+#Apply criteria only to children nodes of Scripts and R_functions folders
+data.tree::SetNodeStyle(myproj$Scripts, style = "box", penwidth = "2px")
+data.tree::SetNodeStyle(myproj$R_functions, style = "box", penwidth = "2px")
+
+#Plot diagram
+plot(myproj)
+```
 
 ## Informative, consistent naming
 

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Sven Buerki" />
 
-<meta name="date" content="2020-09-29" />
+<meta name="date" content="2020-09-30" />
 
 <title>EEB603 – Chapter 4: Reproducible code</title>
 
@@ -27,6 +27,10 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/viz-1.8.2/viz.js"></script>
+<link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="site_libs/grViz-binding-1.0.6.1/grViz.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -369,7 +373,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">EEB603 – Chapter 4: Reproducible code</h1>
 <h4 class="author">Sven Buerki</h4>
-<h4 class="date">2020-09-29</h4>
+<h4 class="date">2020-09-30</h4>
 
 </div>
 
@@ -455,99 +459,144 @@ Figure 4.1: Example file structure of a simple analysis project. Make sure you l
 <li>The <code>Reports</code> folder contains RMarkdown files that document the analysis or report on results.</li>
 <li>The scripts (<code>*.R</code>) that actually do things are stored in the root directory together with the <code>README.md</code> file. If your project has too many scripts, you might consider organizing them in a separate folder.</li>
 </ul>
-<div id="use-r-to-infer-data-structure-and-organization-of-files-in-project" class="section level3">
-<h3><span class="header-section-number">4.4.1</span> Use R to infer data structure and organization of files in project</h3>
+</div>
+<div id="using-r-to-infer-data-structure-and-organization-of-files" class="section level2">
+<h2><span class="header-section-number">4.5</span> Using R to infer data structure and organization of files</h2>
 <p>Inferring the directory tree structure of your project provides a simple and efficient way to summarize the data structure and organization of files related to your project as well as track versioning. The R base functions <em>list.files()</em> and <em>file.info()</em> can be combined to obtain information on files stored in your project. Please see code below for an example associated to Figure <a href="#fig:ProjStuct">4.1</a>.</p>
-<pre class="r"><code># Set working directory to your project directory
-setwd(&quot;Project_ID/&quot;)
-# Produce a list of all files in working directory together
-# with info related to those files
-file.info(list.files(recursive = TRUE, full.name = TRUE))</code></pre>
-<pre><code>##                                                size isdir mode
-## ./Data_structure.R                             1805 FALSE  644
-## ./Data/species_data.csv                           6 FALSE  644
-## ./DataStr_network.html                       256808 FALSE  644
-## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf  10282 FALSE  644
-## ./MS/MS_et_al.docx                            11705 FALSE  644
-## ./Output/DataStr_network.html                256368 FALSE  644
-## ./Output/DataStr_tree.pdf                      3611 FALSE  644
-## ./R_functions/check.install.pkg.R               684 FALSE  644
-## ./README.md                                      14 FALSE  644
-## ./Reports/Documentation.md                       14 FALSE  644
-## ./Scripts/01_download_data.R                     14 FALSE  644
-## ./Scripts/02_clean_data.R                        14 FALSE  644
-## ./Scripts/03_exploratory_analyses.R              14 FALSE  644
-## ./Scripts/04_fit_models.R                        14 FALSE  644
-## ./Scripts/05_generate_figures.R                  14 FALSE  644
-##                                                            mtime
-## ./Data_structure.R                           2019-10-07 08:36:45
-## ./Data/species_data.csv                      2018-09-12 10:02:55
-## ./DataStr_network.html                       2019-09-26 11:41:38
-## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2018-09-09 10:38:23
-## ./MS/MS_et_al.docx                           2019-09-23 11:51:58
-## ./Output/DataStr_network.html                2019-09-23 13:27:30
-## ./Output/DataStr_tree.pdf                    2019-09-23 13:04:03
-## ./R_functions/check.install.pkg.R            2019-09-10 09:54:03
-## ./README.md                                  2018-09-12 08:56:42
-## ./Reports/Documentation.md                   2018-09-12 08:56:42
-## ./Scripts/01_download_data.R                 2018-09-12 08:56:42
-## ./Scripts/02_clean_data.R                    2018-09-12 08:56:42
-## ./Scripts/03_exploratory_analyses.R          2018-09-12 08:56:42
-## ./Scripts/04_fit_models.R                    2018-09-12 08:56:42
-## ./Scripts/05_generate_figures.R              2018-09-12 08:56:42
-##                                                            ctime
-## ./Data_structure.R                           2020-09-28 12:27:19
-## ./Data/species_data.csv                      2020-09-28 12:27:19
-## ./DataStr_network.html                       2020-09-28 12:27:19
-## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-28 12:27:19
-## ./MS/MS_et_al.docx                           2020-09-28 12:27:19
-## ./Output/DataStr_network.html                2020-09-28 12:27:19
-## ./Output/DataStr_tree.pdf                    2020-09-28 12:27:19
-## ./R_functions/check.install.pkg.R            2020-09-28 12:27:19
-## ./README.md                                  2020-09-28 12:27:19
-## ./Reports/Documentation.md                   2020-09-28 12:27:19
-## ./Scripts/01_download_data.R                 2020-09-28 12:27:19
-## ./Scripts/02_clean_data.R                    2020-09-28 12:27:19
-## ./Scripts/03_exploratory_analyses.R          2020-09-28 12:27:19
-## ./Scripts/04_fit_models.R                    2020-09-28 12:27:19
-## ./Scripts/05_generate_figures.R              2020-09-28 12:27:19
-##                                                            atime uid gid
-## ./Data_structure.R                           2020-09-28 12:27:21 502  20
-## ./Data/species_data.csv                      2020-09-27 05:16:00 502  20
-## ./DataStr_network.html                       2020-09-27 05:17:16 502  20
-## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-27 05:16:00 502  20
-## ./MS/MS_et_al.docx                           2020-09-27 05:21:18 502  20
-## ./Output/DataStr_network.html                2020-09-27 05:17:16 502  20
-## ./Output/DataStr_tree.pdf                    2020-09-27 05:16:00 502  20
-## ./R_functions/check.install.pkg.R            2020-09-28 12:27:19 502  20
-## ./README.md                                  2020-09-28 12:27:19 502  20
-## ./Reports/Documentation.md                   2020-09-28 12:27:21 502  20
-## ./Scripts/01_download_data.R                 2020-09-27 05:16:00 502  20
-## ./Scripts/02_clean_data.R                    2020-09-28 12:27:21 502  20
-## ./Scripts/03_exploratory_analyses.R          2020-09-27 05:16:00 502  20
-## ./Scripts/04_fit_models.R                    2020-09-27 05:16:00 502  20
-## ./Scripts/05_generate_figures.R              2020-09-28 12:27:21 502  20
-##                                                   uname grname
-## ./Data_structure.R                           svenbuerki  staff
-## ./Data/species_data.csv                      svenbuerki  staff
-## ./DataStr_network.html                       svenbuerki  staff
-## ./Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf svenbuerki  staff
-## ./MS/MS_et_al.docx                           svenbuerki  staff
-## ./Output/DataStr_network.html                svenbuerki  staff
-## ./Output/DataStr_tree.pdf                    svenbuerki  staff
-## ./R_functions/check.install.pkg.R            svenbuerki  staff
-## ./README.md                                  svenbuerki  staff
-## ./Reports/Documentation.md                   svenbuerki  staff
-## ./Scripts/01_download_data.R                 svenbuerki  staff
-## ./Scripts/02_clean_data.R                    svenbuerki  staff
-## ./Scripts/03_exploratory_analyses.R          svenbuerki  staff
-## ./Scripts/04_fit_models.R                    svenbuerki  staff
-## ./Scripts/05_generate_figures.R              svenbuerki  staff</code></pre>
-<p>The code presented here could be at the core of a user-defined function that would aim at managing files and ensuring data reliability for your project.</p>
+<pre class="r"><code># Produce a list of all files in working directory
+# (Project-ID) together with info related to those files
+file.info(list.files(path = &quot;Project_ID&quot;, recursive = TRUE, full.name = TRUE))</code></pre>
+<pre><code>##                                                         size isdir mode
+## Project_ID/Data/species_data.csv                           6 FALSE  644
+## Project_ID/Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf  10282 FALSE  644
+## Project_ID/MS/MS_et_al.docx                            11705 FALSE  644
+## Project_ID/Output/DataStr_network.html                256368 FALSE  644
+## Project_ID/Output/DataStr_tree.pdf                      3611 FALSE  644
+## Project_ID/R_functions/check.install.pkg.R               684 FALSE  644
+## Project_ID/README.md                                      14 FALSE  644
+## Project_ID/Reports/Documentation.md                       14 FALSE  644
+## Project_ID/Scripts/01_download_data.R                     14 FALSE  644
+## Project_ID/Scripts/02_clean_data.R                        14 FALSE  644
+## Project_ID/Scripts/03_exploratory_analyses.R              14 FALSE  644
+## Project_ID/Scripts/04_fit_models.R                        14 FALSE  644
+## Project_ID/Scripts/05_generate_figures.R                  14 FALSE  644
+##                                                                     mtime
+## Project_ID/Data/species_data.csv                      2018-09-12 10:02:55
+## Project_ID/Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2018-09-09 10:38:23
+## Project_ID/MS/MS_et_al.docx                           2019-09-23 11:51:58
+## Project_ID/Output/DataStr_network.html                2019-09-23 13:27:30
+## Project_ID/Output/DataStr_tree.pdf                    2019-09-23 13:04:03
+## Project_ID/R_functions/check.install.pkg.R            2019-09-10 09:54:03
+## Project_ID/README.md                                  2018-09-12 08:56:42
+## Project_ID/Reports/Documentation.md                   2018-09-12 08:56:42
+## Project_ID/Scripts/01_download_data.R                 2018-09-12 08:56:42
+## Project_ID/Scripts/02_clean_data.R                    2018-09-12 08:56:42
+## Project_ID/Scripts/03_exploratory_analyses.R          2018-09-12 08:56:42
+## Project_ID/Scripts/04_fit_models.R                    2018-09-12 08:56:42
+## Project_ID/Scripts/05_generate_figures.R              2018-09-12 08:56:42
+##                                                                     ctime
+## Project_ID/Data/species_data.csv                      2020-09-28 12:27:19
+## Project_ID/Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-28 12:27:19
+## Project_ID/MS/MS_et_al.docx                           2020-09-28 12:27:19
+## Project_ID/Output/DataStr_network.html                2020-09-28 12:27:19
+## Project_ID/Output/DataStr_tree.pdf                    2020-09-28 12:27:19
+## Project_ID/R_functions/check.install.pkg.R            2020-09-28 12:27:19
+## Project_ID/README.md                                  2020-09-28 12:27:19
+## Project_ID/Reports/Documentation.md                   2020-09-28 12:27:19
+## Project_ID/Scripts/01_download_data.R                 2020-09-28 12:27:19
+## Project_ID/Scripts/02_clean_data.R                    2020-09-28 12:27:19
+## Project_ID/Scripts/03_exploratory_analyses.R          2020-09-28 12:27:19
+## Project_ID/Scripts/04_fit_models.R                    2020-09-28 12:27:19
+## Project_ID/Scripts/05_generate_figures.R              2020-09-28 12:27:19
+##                                                                     atime uid
+## Project_ID/Data/species_data.csv                      2020-09-30 00:58:20 502
+## Project_ID/Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf 2020-09-30 00:58:20 502
+## Project_ID/MS/MS_et_al.docx                           2020-09-30 00:57:28 502
+## Project_ID/Output/DataStr_network.html                2020-09-30 00:55:27 502
+## Project_ID/Output/DataStr_tree.pdf                    2020-09-30 00:58:20 502
+## Project_ID/R_functions/check.install.pkg.R            2020-09-30 00:58:20 502
+## Project_ID/README.md                                  2020-09-30 00:58:20 502
+## Project_ID/Reports/Documentation.md                   2020-09-30 00:58:20 502
+## Project_ID/Scripts/01_download_data.R                 2020-09-30 00:58:20 502
+## Project_ID/Scripts/02_clean_data.R                    2020-09-30 00:58:20 502
+## Project_ID/Scripts/03_exploratory_analyses.R          2020-09-30 00:58:20 502
+## Project_ID/Scripts/04_fit_models.R                    2020-09-30 00:58:20 502
+## Project_ID/Scripts/05_generate_figures.R              2020-09-30 00:58:20 502
+##                                                       gid      uname grname
+## Project_ID/Data/species_data.csv                       20 svenbuerki  staff
+## Project_ID/Figures_&amp;_Tables/Fig_01_Data_lifecycle.pdf  20 svenbuerki  staff
+## Project_ID/MS/MS_et_al.docx                            20 svenbuerki  staff
+## Project_ID/Output/DataStr_network.html                 20 svenbuerki  staff
+## Project_ID/Output/DataStr_tree.pdf                     20 svenbuerki  staff
+## Project_ID/R_functions/check.install.pkg.R             20 svenbuerki  staff
+## Project_ID/README.md                                   20 svenbuerki  staff
+## Project_ID/Reports/Documentation.md                    20 svenbuerki  staff
+## Project_ID/Scripts/01_download_data.R                  20 svenbuerki  staff
+## Project_ID/Scripts/02_clean_data.R                     20 svenbuerki  staff
+## Project_ID/Scripts/03_exploratory_analyses.R           20 svenbuerki  staff
+## Project_ID/Scripts/04_fit_models.R                     20 svenbuerki  staff
+## Project_ID/Scripts/05_generate_figures.R               20 svenbuerki  staff</code></pre>
+<div id="pseudocode-and-associated-r-script" class="section level3">
+<h3><span class="header-section-number">4.5.1</span> Pseudocode and associated R script</h3>
+<p>The code presented above could be at the core of a user-defined function that would aim at managing files and ensuring data reliability for your project. To help you define such a function, let’s investigate this further and produce a diagram summarizing your project structure. This objective is achieved in three steps (see Figure <a href="#fig:plotProjStr">4.2</a>):</p>
+<ul>
+<li><strong>Step 1:</strong> Produce a list of all files in your working directory using <em>file.info</em> and <em>list.files</em> functions. The output of this code is a <code>data.frame</code></li>
+<li><strong>Step 2:</strong> Convert the <code>data.frame</code> into a <code>data.tree</code> class object. This is done using the <em>data.tree::as.Node</em> function from the <code>data.tree</code> package.</li>
+<li><strong>Step 3:</strong> Prepare and plot diagram of project structure. This is done using set of functions from <code>data.tree</code> and plotting the output using <code>DiagrammR</code> package.</li>
+</ul>
+<pre class="r"><code>### Step 1: Produce a list of all files in Project_ID
+filesInfo &lt;- file.info(list.files(path = &quot;Project_ID&quot;, recursive = TRUE, 
+    full.name = TRUE))
+### Step 2: Convert filesInfo into data.tree class
+myproj &lt;- data.tree::as.Node(data.frame(pathString = rownames(filesInfo)))
+# Inspect output
+print(myproj)</code></pre>
+<pre><code>##                            levelName
+## 1  Project_ID                       
+## 2   ¦--Data                         
+## 3   ¦   °--species_data.csv         
+## 4   ¦--Figures_&amp;_Tables             
+## 5   ¦   °--Fig_01_Data_lifecycle.pdf
+## 6   ¦--MS                           
+## 7   ¦   °--MS_et_al.docx            
+## 8   ¦--Output                       
+## 9   ¦   ¦--DataStr_network.html     
+## 10  ¦   °--DataStr_tree.pdf         
+## 11  ¦--R_functions                  
+## 12  ¦   °--check.install.pkg.R      
+## 13  ¦--README.md                    
+## 14  ¦--Reports                      
+## 15  ¦   °--Documentation.md         
+## 16  °--Scripts                      
+## 17      ¦--01_download_data.R       
+## 18      ¦--02_clean_data.R          
+## 19      ¦--03_exploratory_analyses.R
+## 20      ¦--04_fit_models.R          
+## 21      °--05_generate_figures.R</code></pre>
+<pre class="r"><code>### Step 3: Prepare and plot diagram of project structure (it
+### requires DiagrammeR)
+# Set parameters related to graph, edges and nodes
+data.tree::SetGraphStyle(myproj$root, rankdir = &quot;LR&quot;)
+data.tree::SetEdgeStyle(myproj$root, arrowhead = &quot;vee&quot;, color = &quot;grey&quot;, 
+    penwidth = &quot;2px&quot;)
+data.tree::SetNodeStyle(myproj, style = &quot;rounded&quot;, shape = &quot;box&quot;)
+# Apply criteria only to children nodes of Scripts and
+# R_functions folders
+data.tree::SetNodeStyle(myproj$Scripts, style = &quot;box&quot;, penwidth = &quot;2px&quot;)
+data.tree::SetNodeStyle(myproj$R_functions, style = &quot;box&quot;, penwidth = &quot;2px&quot;)
+# Plot diagram
+plot(myproj)</code></pre>
+<div class="figure"><span id="fig:plotProjStr"></span>
+<div id="htmlwidget-035317d2dd7f00f3426a" style="width:576px;height:576px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-035317d2dd7f00f3426a">{"x":{"diagram":"digraph {\n\ngraph [rankdir = \"LR\"]\n\n\n\n  \"1\" [label = \"Project_ID\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"Data\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"species_data.csv\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"Figures_&_Tables\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"Fig_01_Data_lifecycle.pdf\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"MS\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"MS_et_al.docx\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"Output\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"DataStr_network.html\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"DataStr_tree.pdf\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"R_functions\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"check.install.pkg.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"README.md\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"Reports\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"Documentation.md\", style = \"rounded\", shape = \"box\", penwidth = \"\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"16\" [label = \"Scripts\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"17\" [label = \"01_download_data.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"18\" [label = \"02_clean_data.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"19\" [label = \"03_exploratory_analyses.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"20\" [label = \"04_fit_models.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"21\" [label = \"05_generate_figures.R\", style = \"box\", shape = \"box\", penwidth = \"2px\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n\"1\"->\"2\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"4\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"6\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"8\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"11\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"13\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"14\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"1\"->\"16\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"2\"->\"3\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"4\"->\"5\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"6\"->\"7\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"8\"->\"9\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"8\"->\"10\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"11\"->\"12\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"14\"->\"15\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"16\"->\"17\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"16\"->\"18\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"16\"->\"19\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"16\"->\"20\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n\"16\"->\"21\" [arrowhead = \"vee\", color = \"grey\", penwidth = \"2px\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 4.2: Diagram of project structure for the Project_ID directory. Nodes representing folders and files associated to R code are symbolized by boxes, whereas the others are rounded.
+</p>
+</div>
 </div>
 </div>
 <div id="informative-consistent-naming" class="section level2">
-<h2><span class="header-section-number">4.5</span> Informative, consistent naming</h2>
+<h2><span class="header-section-number">4.6</span> Informative, consistent naming</h2>
 <p>Good naming extends to all files, folders and even objects in your analysis and serves to make the contents and relationships among elements of your analysis understandable, searchable and organised in a logical fashion (see Figure <a href="#fig:ProjStuct">4.1</a> for examples and Chapter 4: Data management for more details).</p>
 </div>
 </div>
@@ -733,27 +782,29 @@ exp_number(&quot;hello&quot;, 5)</code></pre>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] devtools_2.2.1       usethis_1.5.1        knitcitations_1.0.10
-##  [4] htmltools_0.5.0      prettydoc_0.3.1      magrittr_1.5        
-##  [7] dplyr_0.8.3          kableExtra_1.1.0     formattable_0.2.0.1 
-## [10] bookdown_0.20        rmarkdown_2.3        knitr_1.30          
+##  [1] DiagrammeR_1.0.6.1   data.tree_0.7.11     devtools_2.2.1      
+##  [4] usethis_1.5.1        knitcitations_1.0.10 htmltools_0.5.0     
+##  [7] prettydoc_0.3.1      magrittr_1.5         dplyr_0.8.3         
+## [10] kableExtra_1.1.0     formattable_0.2.0.1  bookdown_0.20       
+## [13] rmarkdown_2.3        knitr_1.30          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        lubridate_1.7.9   prettyunits_1.1.1 ps_1.3.0         
-##  [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25     R6_2.4.1         
-##  [9] plyr_1.8.5        backports_1.1.10  evaluate_0.14     highr_0.8        
-## [13] httr_1.4.1        pillar_1.4.3      rlang_0.4.7       rstudioapi_0.11  
-## [17] callr_3.4.1       desc_1.2.0        webshot_0.5.2     RefManageR_1.2.12
-## [21] readr_1.3.1       stringr_1.4.0     htmlwidgets_1.5.1 munsell_0.5.0    
-## [25] compiler_3.6.1    xfun_0.17         pkgconfig_2.0.3   pkgbuild_1.0.6   
-## [29] tidyselect_0.2.5  tibble_2.1.3      codetools_0.2-16  fansi_0.4.1      
-## [33] viridisLite_0.3.0 crayon_1.3.4      withr_2.1.2       jsonlite_1.7.1   
-## [37] lifecycle_0.1.0   formatR_1.7       scales_1.1.1      bibtex_0.4.2.2   
-## [41] cli_2.0.1         stringi_1.5.3     fs_1.3.1          remotes_2.1.0    
-## [45] testthat_2.3.1    xml2_1.3.2        ellipsis_0.3.1    generics_0.0.2   
-## [49] vctrs_0.3.4       tools_3.6.1       glue_1.4.2        purrr_0.3.3      
-## [53] hms_0.5.3         processx_3.4.1    pkgload_1.0.2     yaml_2.2.1       
-## [57] colorspace_1.4-1  sessioninfo_1.1.1 rvest_0.3.5       memoise_1.1.0</code></pre>
+##  [1] Rcpp_1.0.5         lubridate_1.7.9    tidyr_1.0.2        visNetwork_2.0.9  
+##  [5] prettyunits_1.1.1  ps_1.3.0           assertthat_0.2.1   rprojroot_1.3-2   
+##  [9] digest_0.6.25      R6_2.4.1           plyr_1.8.5         backports_1.1.10  
+## [13] evaluate_0.14      highr_0.8          httr_1.4.1         pillar_1.4.3      
+## [17] rlang_0.4.7        rstudioapi_0.11    callr_3.4.1        desc_1.2.0        
+## [21] webshot_0.5.2      RefManageR_1.2.12  readr_1.3.1        stringr_1.4.0     
+## [25] htmlwidgets_1.5.1  munsell_0.5.0      compiler_3.6.1     xfun_0.17         
+## [29] pkgconfig_2.0.3    pkgbuild_1.0.6     tidyselect_0.2.5   tibble_2.1.3      
+## [33] codetools_0.2-16   fansi_0.4.1        viridisLite_0.3.0  crayon_1.3.4      
+## [37] withr_2.1.2        jsonlite_1.7.1     lifecycle_0.1.0    formatR_1.7       
+## [41] scales_1.1.1       bibtex_0.4.2.2     cli_2.0.1          stringi_1.5.3     
+## [45] fs_1.3.1           remotes_2.1.0      testthat_2.3.1     xml2_1.3.2        
+## [49] ellipsis_0.3.1     generics_0.0.2     vctrs_0.3.4        RColorBrewer_1.1-2
+## [53] tools_3.6.1        glue_1.4.2         purrr_0.3.3        hms_0.5.3         
+## [57] processx_3.4.1     pkgload_1.0.2      yaml_2.2.1         colorspace_1.4-1  
+## [61] sessioninfo_1.1.1  rvest_0.3.5        memoise_1.1.0</code></pre>
 </div>
 <div id="using-r-packages-to-help-managing-dependencies-and-recreate-setup" class="section level2">
 <h2><span class="header-section-number">6.2</span> Using R packages to help managing dependencies and recreate setup</h2>
@@ -858,27 +909,29 @@ Syntax</em>. R package version 1.1.0. 2019. &lt;URL:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] devtools_2.2.1       usethis_1.5.1        knitcitations_1.0.10
-##  [4] htmltools_0.5.0      prettydoc_0.3.1      magrittr_1.5        
-##  [7] dplyr_0.8.3          kableExtra_1.1.0     formattable_0.2.0.1 
-## [10] bookdown_0.20        rmarkdown_2.3        knitr_1.30          
+##  [1] DiagrammeR_1.0.6.1   data.tree_0.7.11     devtools_2.2.1      
+##  [4] usethis_1.5.1        knitcitations_1.0.10 htmltools_0.5.0     
+##  [7] prettydoc_0.3.1      magrittr_1.5         dplyr_0.8.3         
+## [10] kableExtra_1.1.0     formattable_0.2.0.1  bookdown_0.20       
+## [13] rmarkdown_2.3        knitr_1.30          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.5        lubridate_1.7.9   prettyunits_1.1.1 ps_1.3.0         
-##  [5] assertthat_0.2.1  rprojroot_1.3-2   digest_0.6.25     R6_2.4.1         
-##  [9] plyr_1.8.5        backports_1.1.10  evaluate_0.14     highr_0.8        
-## [13] httr_1.4.1        pillar_1.4.3      rlang_0.4.7       rstudioapi_0.11  
-## [17] callr_3.4.1       desc_1.2.0        webshot_0.5.2     RefManageR_1.2.12
-## [21] readr_1.3.1       stringr_1.4.0     htmlwidgets_1.5.1 munsell_0.5.0    
-## [25] compiler_3.6.1    xfun_0.17         pkgconfig_2.0.3   pkgbuild_1.0.6   
-## [29] tidyselect_0.2.5  tibble_2.1.3      codetools_0.2-16  fansi_0.4.1      
-## [33] viridisLite_0.3.0 crayon_1.3.4      withr_2.1.2       jsonlite_1.7.1   
-## [37] lifecycle_0.1.0   formatR_1.7       scales_1.1.1      bibtex_0.4.2.2   
-## [41] cli_2.0.1         stringi_1.5.3     fs_1.3.1          remotes_2.1.0    
-## [45] testthat_2.3.1    xml2_1.3.2        ellipsis_0.3.1    generics_0.0.2   
-## [49] vctrs_0.3.4       tools_3.6.1       glue_1.4.2        purrr_0.3.3      
-## [53] hms_0.5.3         processx_3.4.1    pkgload_1.0.2     yaml_2.2.1       
-## [57] colorspace_1.4-1  sessioninfo_1.1.1 rvest_0.3.5       memoise_1.1.0</code></pre>
+##  [1] Rcpp_1.0.5         lubridate_1.7.9    tidyr_1.0.2        visNetwork_2.0.9  
+##  [5] prettyunits_1.1.1  ps_1.3.0           assertthat_0.2.1   rprojroot_1.3-2   
+##  [9] digest_0.6.25      R6_2.4.1           plyr_1.8.5         backports_1.1.10  
+## [13] evaluate_0.14      highr_0.8          httr_1.4.1         pillar_1.4.3      
+## [17] rlang_0.4.7        rstudioapi_0.11    callr_3.4.1        desc_1.2.0        
+## [21] webshot_0.5.2      RefManageR_1.2.12  readr_1.3.1        stringr_1.4.0     
+## [25] htmlwidgets_1.5.1  munsell_0.5.0      compiler_3.6.1     xfun_0.17         
+## [29] pkgconfig_2.0.3    pkgbuild_1.0.6     tidyselect_0.2.5   tibble_2.1.3      
+## [33] codetools_0.2-16   fansi_0.4.1        viridisLite_0.3.0  crayon_1.3.4      
+## [37] withr_2.1.2        jsonlite_1.7.1     lifecycle_0.1.0    formatR_1.7       
+## [41] scales_1.1.1       bibtex_0.4.2.2     cli_2.0.1          stringi_1.5.3     
+## [45] fs_1.3.1           remotes_2.1.0      testthat_2.3.1     xml2_1.3.2        
+## [49] ellipsis_0.3.1     generics_0.0.2     vctrs_0.3.4        RColorBrewer_1.1-2
+## [53] tools_3.6.1        glue_1.4.2         purrr_0.3.3        hms_0.5.3         
+## [57] processx_3.4.1     pkgload_1.0.2      yaml_2.2.1         colorspace_1.4-1  
+## [61] sessioninfo_1.1.1  rvest_0.3.5        memoise_1.1.0</code></pre>
 </div>
 
 
