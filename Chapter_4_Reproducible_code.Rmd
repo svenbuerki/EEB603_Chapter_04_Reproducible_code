@@ -153,11 +153,15 @@ print(myproj)
 
 ### Step 3: Prepare and plot diagram of project structure (it requires DiagrammeR)
 
-#Set parameters related to graph, edges and nodes
+#Set general parameters related to graph
 data.tree::SetGraphStyle(myproj$root, rankdir = "LR")
+
+#Set parameters for edges
 data.tree::SetEdgeStyle(myproj$root, arrowhead = "vee", color = "grey", penwidth = "2px")
+
+#Set parameters for nodes
 data.tree::SetNodeStyle(myproj, style = "rounded", shape = "box")
-#Apply criteria only to children nodes of Scripts and R_functions folders
+#Apply specific criteria only to children nodes of Scripts and R_functions folders
 data.tree::SetNodeStyle(myproj$Scripts, style = "box", penwidth = "2px")
 data.tree::SetNodeStyle(myproj$R_functions, style = "box", penwidth = "2px")
 
